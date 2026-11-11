@@ -233,7 +233,8 @@ def hero_sheet():
 CSS = """
 @font-face{font-family:"Bricolage Grotesque";src:url(/fonts/bricolage.woff2) format("woff2");font-weight:300 800;font-style:normal;font-display:swap}
 :root{--c:#00AEEF;--m:#EC008C;--y:#FFF200;--k:#141414;--m2:#C70075;--ink:#141414;--ink2:#55565B;--line:#E3E3E8;--paper:#fff;--soft:#F6F6F8;--r:20px;color-scheme:light}
-*{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}.lenis:not(.lenis-autoToggle).lenis-stopped{overflow:clip}.lenis [data-lenis-prevent]{overscroll-behavior:contain}
 body{margin:0;background:#fff;color:var(--ink);font:400 17px/1.6 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
 img,svg{max-width:100%}a{color:inherit}
 .wrap{width:min(1120px,100% - 40px);margin-inline:auto}
@@ -241,8 +242,8 @@ img,svg{max-width:100%}a{color:inherit}
 .bar4{height:6px;background:linear-gradient(90deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%)}
 /* evidenziatore giallo, come un pennarello sul foglio di prova */
 em{font-style:normal;color:var(--m);position:relative;white-space:nowrap;z-index:0}
-em::before{content:"";position:absolute;left:-.08em;right:-.08em;bottom:.02em;height:.46em;background:var(--y);z-index:-1;transform:scaleX(0);transform-origin:left;animation:ul .8s .45s cubic-bezier(.2,.8,.2,1) forwards;border-radius:2px}
-@keyframes ul{to{transform:scaleX(1)}}
+em::before{content:"";position:absolute;left:-.08em;right:-.08em;bottom:.02em;height:.46em;background:var(--y);z-index:-1;transform:scaleX(var(--u,0));transform-origin:left;border-radius:2px}
+html:not(.js) em,html.nogsap em{--u:1}
 /* intestazione */
 .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:2px solid transparent;transition:border-color .25s}
 .top.scrolled{border-bottom-color:var(--k)}
@@ -268,33 +269,27 @@ nav a:nth-child(1):hover{background:var(--c)}nav a:nth-child(2):hover{background
  -webkit-mask-image:radial-gradient(60% 75% at 88% 18%,#000,transparent 72%);mask-image:radial-gradient(60% 75% at 88% 18%,#000,transparent 72%)}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13.5px;letter-spacing:.09em;text-transform:uppercase;border:2px solid var(--k);padding:6px 14px;border-radius:99px;background:#fff}
-.eyebrow i{display:inline-flex;gap:3px}.eyebrow i b{width:9px;height:9px;border-radius:50%;display:block;animation:pulse 2.4s infinite}
+.eyebrow i{display:inline-flex;gap:3px}.eyebrow i b{width:9px;height:9px;border-radius:50%;display:block;}
 .eyebrow i b:nth-child(1){background:var(--c)}.eyebrow i b:nth-child(2){background:var(--m);animation-delay:.2s}.eyebrow i b:nth-child(3){background:var(--y);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);animation-delay:.4s}.eyebrow i b:nth-child(4){background:var(--k);animation-delay:.6s}
-@keyframes pulse{50%{transform:scale(1.5)}}
 h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-.035em;margin:22px 0 20px;font-weight:800}
 .lead{font-size:clamp(18px,2vw,21px);color:var(--ink2);max-width:34em;margin:0 0 30px}
 .cta{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .meta{margin:22px 0 0;font-size:14.5px;color:var(--ink2)}
 /* il foglio con due "lastre" sfalsate dietro, come un errore di registro */
-.sheetwrap{position:relative;justify-self:center;width:min(100%,430px);animation:float 7s ease-in-out infinite}
+.sheetwrap{position:relative;justify-self:center;width:min(100%,430px)}
 .sheetwrap::before,.sheetwrap::after{content:"";position:absolute;inset:0;border-radius:3px;transform:rotate(-2.5deg)}
 .sheetwrap::before{background:var(--c);translate:-16px 12px;opacity:.9}
 .sheetwrap::after{background:var(--y);translate:16px 18px;box-shadow:0 0 0 2px var(--k)}
-@keyframes float{50%{transform:translateY(-10px) rotate(.6deg)}}
 .sheet{position:relative;z-index:1;display:block;width:100%;height:auto;border-radius:3px;transform:rotate(-2.5deg);box-shadow:0 0 0 2px var(--k),8px 8px 0 var(--m)}
-.hc{opacity:0;transform-box:fill-box;transform-origin:center;animation:pop .7s cubic-bezier(.2,1.2,.3,1) forwards;animation-delay:calc(var(--i)*75ms + .35s)}
-@keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
-.hm{stroke-dasharray:100;stroke-dashoffset:100;animation:draw 1.1s 1.4s ease-out forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.reg{position:absolute;right:-6px;top:-26px;width:58px;height:58px;z-index:2;animation:spin 14s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.hc{transform-box:fill-box;transform-origin:center}html.js:not(.nogsap) .hc{opacity:0}
+.hm{stroke-dasharray:100;stroke-dashoffset:0}html.js:not(.nogsap) .hm{stroke-dashoffset:100}
+.reg{position:absolute;right:-6px;top:-26px;width:58px;height:58px;z-index:2}
 /* sezioni */
 section{padding:92px 0;position:relative}
 h2{font-size:clamp(30px,4.2vw,50px);line-height:1.06;letter-spacing:-.03em;margin:0 0 14px;font-weight:800}
 .sub{color:var(--ink2);max-width:40em;margin:0 0 44px;font-size:18px}
 .kick{display:inline-block;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;padding:3px 10px;background:var(--y)}
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--d,0)*90ms)}
-html:not(.js) .rv,.rv.in{opacity:1;transform:none}
+html.js:not(.nogsap) .rv:not(.in){opacity:0}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;counter-reset:s}
 .step{background:#fff;border:2px solid var(--k);border-radius:var(--r);padding:30px 28px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
 .step:nth-child(1){box-shadow:7px 7px 0 var(--c)}.step:nth-child(2){box-shadow:7px 7px 0 var(--m)}.step:nth-child(3){box-shadow:7px 7px 0 var(--y)}
@@ -336,7 +331,7 @@ html:not(.js) .rv,.rv.in{opacity:1;transform:none}
 .stage-col{position:sticky;top:78px;height:calc(100vh - 100px);display:grid;place-items:center}
 .stagebox{position:relative;width:min(100%,430px)}
 #scene{display:block;width:100%;height:auto;max-height:calc(100vh - 190px);aspect-ratio:210/297;margin-inline:auto;background:#fff;border:2px solid var(--k);border-radius:3px;box-shadow:9px 9px 0 var(--y);overflow:hidden}
-#cam{transform-origin:0 0;transition:transform 1.1s cubic-bezier(.5,0,.15,1)}
+#cam{transform-origin:0 0}
 #scene .ring{fill:var(--m);fill-rule:evenodd;opacity:0;transition:opacity .6s}#scene.s1 .ring{opacity:.45}
 #scene .bd{opacity:0;transition:opacity .6s}#scene.s1 .bd{opacity:1}
 #scene .mk{transition:stroke-width .6s,stroke .6s}
@@ -452,7 +447,7 @@ def home(lang):
 <p class="upd">{e(t["dl_upd"])}</p></div></div></div></section>
 </main>
 <footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv"])}</div><div>{e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
-<script src="/js/site.js" defer></script></body></html>'''
+<script src="/js/vendor/gsap.min.js" defer></script><script src="/js/vendor/ScrollTrigger.min.js" defer></script><script src="/js/vendor/lenis.min.js" defer></script><script src="/js/site.js" defer></script></body></html>'''
     ld = [
      {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": NAME, "operatingSystem": "macOS 13+",
       "applicationCategory": "DesignApplication", "description": t["desc"], "url": url(t["prefix"]), "downloadUrl": DL,

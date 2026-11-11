@@ -2,14 +2,57 @@
   'use strict';
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Rivelazione allo scroll
-  var items = [].slice.call(document.querySelectorAll('.rv'));
-  if ('IntersectionObserver' in window && !reduce) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    items.forEach(function (el) { io.observe(el); });
-  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+  // Scorrimento fluido (Lenis) + animazioni (GSAP / ScrollTrigger)
+  var hasGsap = !!(window.gsap && window.ScrollTrigger);
+  var lenis = null;
+  if (!hasGsap) {
+    document.documentElement.classList.add('nogsap');
+    [].forEach.call(document.querySelectorAll('.rv'), function (el) { el.classList.add('in'); });
+  } else {
+    gsap.registerPlugin(ScrollTrigger);
+    if (!reduce && window.Lenis) {
+      lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+      // i link interni scorrono con Lenis, tenendo conto dell'intestazione fissa
+      [].forEach.call(document.querySelectorAll('a[href^="#"]'), function (a) {
+        a.addEventListener('click', function (ev) {
+          var id = a.getAttribute('href'), t = id.length > 1 && document.querySelector(id);
+          if (!t) return;
+          ev.preventDefault(); lenis.scrollTo(t, { offset: -70 });
+          if (history.pushState) history.pushState(null, '', id);
+        });
+      });
+    }
+    window.__lenis = lenis;
+
+    var rv = [].slice.call(document.querySelectorAll('.rv'));
+    if (reduce) { rv.forEach(function (el) { el.classList.add('in'); }); }
+    else {
+      gsap.set(rv, { y: 22 });
+      ScrollTrigger.batch(rv, {
+        start: 'top 92%', once: true,
+        onEnter: function (els) {
+          gsap.to(els, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.09, overwrite: true,
+            onComplete: function () { els.forEach(function (el) { el.classList.add('in'); }); gsap.set(els, { clearProps: 'opacity,transform' }); } });
+        }
+      });
+    }
+
+    // Hero: biglietti che entrano, crocini che si disegnano, sottolineatura, movimenti continui
+    var hc = document.querySelectorAll('.hc'), hm = document.querySelector('.hm'), ems = document.querySelectorAll('em');
+    if (reduce) {
+      gsap.set(hc, { opacity: 1 }); if (hm) gsap.set(hm, { strokeDashoffset: 0 }); gsap.set(ems, { '--u': 1 });
+    } else {
+      gsap.fromTo(hc, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.6)', stagger: 0.075, delay: 0.35 });
+      if (hm) gsap.to(hm, { strokeDashoffset: 0, duration: 1.1, ease: 'power1.out', delay: 1.4 });
+      gsap.to(ems, { '--u': 1, duration: 0.8, ease: 'power3.out', delay: 0.45 });
+      gsap.to('.sheetwrap', { y: -10, rotation: 0.6, duration: 3.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+      gsap.to('.reg', { rotation: 360, duration: 14, ease: 'none', repeat: -1 });
+      gsap.to('.eyebrow i b', { scale: 1.5, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: -1, stagger: 0.2 });
+    }
+  }
 
   // Intestazione che prende ombra scorrendo
   var head = document.querySelector('.top');
@@ -171,7 +214,13 @@
     nEl.textContent = g.count;
     last = g; return g;
   }
-  function camTo(px, py, s) { cam.style.transform = 'translate(' + (PW / 2 - px * s) + 'px,' + (PH / 2 - py * s) + 'px) scale(' + s + ')'; }
+  var hasG = !!window.gsap;
+  if (hasG) gsap.set(cam, { svgOrigin: '0 0' });
+  function camTo(px, py, s) {
+    var x = PW / 2 - px * s, y = PH / 2 - py * s;
+    if (hasG) gsap.to(cam, { x: x, y: y, scale: s, duration: reduce ? 0 : 1.1, ease: 'power3.inOut', overwrite: true });
+    else cam.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + s + ')';
+  }
   function markStyle(w, col) { marks.style.strokeWidth = w; marks.style.stroke = col; }
 
   var timer = null, active = -1;
