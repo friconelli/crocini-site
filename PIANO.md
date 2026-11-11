@@ -13,11 +13,14 @@ Il pulsante punta a `https://github.com/friconelli/crocini/releases/latest/downl
 python3 build.py && python3 -m http.server 8099 -d dist     # http://localhost:8099/
 ```
 
-## Da fare prima di pubblicare
-- [ ] **Dominio**: oggi `build.py` usa `https://crocini.app` solo come valore predefinito (canonical, hreflang, sitemap, Open Graph). Scegliere/comprare il dominio, poi `SITE_URL=https://… python3 build.py`.
-- [ ] **Hosting**: nuovo progetto Vercel dalla cartella `crocini-site` (`vercel.json` pronto: cartella `dist`, build `python3 build.py`, header di sicurezza, CSP solo con risorse proprie); aggiungere il dominio.
+## Pubblicazione
+- Repository: https://github.com/friconelli/crocini-site (pubblico).
+- Vercel: progetto `crocini` (account friconelli-4630), online su **https://crocini.vercel.app/**. `vercel.json`: cartella `dist`, build `python3 build.py`, header di sicurezza, CSP solo con risorse proprie. La variabile `SITE_URL` (Production) vale `https://crocini.vercel.app`.
+- Aggiornare: `git push` (se il repository è collegato a Vercel parte da solo) oppure `npx vercel@latest deploy --prod --yes` dalla cartella. La versione mostrata nel download viene letta dall'ultima release di GitHub a ogni build: dopo una nuova release basta un nuovo deploy.
+
+## Da fare
+- [ ] **Dominio proprio**: oggi canonical, hreflang, sitemap e Open Graph usano `crocini.vercel.app`. Quando il dominio c'è: aggiungerlo su Vercel (Settings → Domains), cambiare `SITE_URL` (`npx vercel env rm SITE_URL production` + `env add`) e rifare il deploy; reindirizzare `crocini.vercel.app`.
 - [ ] Search Console / Bing Webmaster: inviare `/sitemap.xml`.
-- [ ] Repository GitHub del sito (non ancora creato).
 
 ## Immagini e font
 - `src/img/app.webp`: screenshot dell'app (`Crocini --art biglietto.png --snapshot out.png`, ritagliata di 56 px in alto) con il biglietto di esempio generato da `Scripts/make_sample_card.swift` (91×61 mm, 300 dpi).
