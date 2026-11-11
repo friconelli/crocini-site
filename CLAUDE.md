@@ -4,3 +4,4 @@ Landing statica IT/EN generata da `build.py` → `dist/` (vedi PIANO.md). Antepr
 - Testi in `T` (it/en) dentro build.py: ogni modifica va fatta in entrambe le lingue.
 - Per le prove con screenshot: Chrome headless (`--headless=new --force-prefers-reduced-motion`); le animazioni `.rv` a scroll compaiono sbiadite negli screenshot senza reduced-motion.
 - Online: https://crocini.vercel.app (Vercel, progetto `crocini`); repo github.com/friconelli/crocini-site. Dominio proprio non ancora scelto: variabile `SITE_URL`. App: ../crocini (repo github.com/friconelli/crocini).
+- Sezione a scorrimento: i testi dei passi sono in `sc_steps` (it/en) dentro build.py; la scena è SVG disegnato da `site.js` (ultimo blocco), il passo attivo è quello più vicino al centro dello schermo (listener di scroll, non IntersectionObserver). Per provarla in Chrome headless serve un iframe + `scrollTo({behavior:'instant'})` perché `html{scroll-behavior:smooth}`.

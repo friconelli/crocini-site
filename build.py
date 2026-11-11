@@ -75,6 +75,16 @@ T = {
  "show_h": "Tutto sotto controllo, in una finestra",
  "show_p": "A sinistra le impostazioni, a destra il foglio in tempo reale: cambi un valore e i pezzi si rimettono in ordine davanti a te.",
  "show_alt": "La finestra di Crocini: a sinistra le impostazioni, a destra un foglio A4 con dieci biglietti da visita e i segni di taglio",
+
+ "sc_kick": "Dentro l’app", "sc_h": "Scorri, e guarda il foglio cambiare",
+ "sc_p": "Ogni funzione, vista sul foglio: la pagina si muove con te.", "sc_unit": "pezzi", "sc_alt": "Un foglio A4 che cambia mentre scorri: biglietti, abbondanza, segni di taglio, zoom e rotazione automatica",
+ "sc_steps": [
+  ("Un preset e il foglio è pronto", "Biglietti, cartoline, flyer, etichette: scegli un formato e Crocini calcola subito quanti pezzi entrano. I tuoi preset li salvi e li richiami con un clic.", ""),
+  ("L’abbondanza a modo tuo", "Il file ce l’ha già? La usi. Altrimenti la aggiungi con un colore piatto o ingrandendo la grafica: stampa a vivo senza strisce bianche.", "Abbondanza 3 mm"),
+  ("Crocini su misura", "Spessore, lunghezza, colore e distanza dal rifilo. Stanno sul bordo della griglia, pronti per la ghigliottina.", "Segni di taglio"),
+  ("Zoom come negli editor grafici", "Rotella, pinch, lente e mano; barra spaziatrice per spostarti. Controlli ogni dettaglio del taglio prima di stampare.", "Zoom"),
+  ("Gira i pezzi da solo", "Se ruotando gli elementi ne entrano di più sul foglio, Crocini li gira per te: da 3 a 5 segnalibri, senza toccare nulla.", ""),
+ ],
  "faq_h": "Domande frequenti",
  "faq": [
   ("Su quali Mac funziona?", "Su tutti i Mac con macOS 13 Ventura o successivo, sia con Apple Silicon sia con processore Intel."),
@@ -137,6 +147,16 @@ T = {
  "show_h": "Everything under control, in one window",
  "show_p": "Settings on the left, the live sheet on the right: change a value and the pieces rearrange right in front of you.",
  "show_alt": "The Crocini window: settings on the left, an A4 sheet with ten business cards and crop marks on the right",
+
+ "sc_kick": "Inside the app", "sc_h": "Scroll, and watch the sheet change",
+ "sc_p": "Every feature, shown on the sheet: the page moves with you.", "sc_unit": "pieces", "sc_alt": "An A4 sheet that changes as you scroll: cards, bleed, crop marks, zoom and automatic rotation",
+ "sc_steps": [
+  ("A preset and the sheet is ready", "Business cards, postcards, flyers, labels: pick a format and Crocini instantly works out how many pieces fit. Save your own presets and recall them with one click.", ""),
+  ("Bleed, your way", "Already in the file? Use it. Otherwise add it with a flat colour or by enlarging the artwork: full-bleed printing without white edges.", "Bleed 3 mm"),
+  ("Custom crop marks", "Thickness, length, colour and distance from the trim. They sit on the edge of the grid, ready for the guillotine.", "Crop marks"),
+  ("Zoom like design editors", "Wheel, pinch, lens and hand; space bar to pan. Check every detail of the cut before printing.", "Zoom"),
+  ("It turns the pieces for you", "If turning the items fits more on the sheet, Crocini rotates them for you: from 3 to 5 bookmarks, without touching a thing.", ""),
+ ],
  "faq_h": "Frequently asked questions",
  "faq": [
   ("Which Macs does it run on?", "Any Mac running macOS 13 Ventura or later, both Apple Silicon and Intel."),
@@ -310,11 +330,27 @@ html:not(.js) .rv,.rv.in{opacity:1;transform:none}
 .ic{width:48px;height:48px;padding:11px;border-radius:50%;color:var(--k);border:2px solid var(--k);margin-bottom:16px}
 .feat:nth-child(3n+1) .ic{background:var(--c)}.feat:nth-child(3n+2) .ic{background:var(--m)}.feat:nth-child(3n) .ic{background:var(--y)}
 .feat h3{margin:0 0 6px;font-size:19px;letter-spacing:-.015em;line-height:1.2}.feat p{margin:0;color:var(--ink2);font-size:15.5px;line-height:1.5}
-/* finestra dell'app: cattura reale con la sua ombra */
-.shot{position:relative;margin:8px auto 0;max-width:1120px}
-.tl{position:absolute;top:4.46%;width:.95%;aspect-ratio:1;border-radius:50%;translate:-50% -50%;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.22);z-index:1}
-.tl.r{left:3.67%;background:#FF5F57}.tl.y{left:5.19%;background:#FEBC2E}.tl.g{left:6.71%;background:#28C840}
-.shot img{display:block;width:100%;height:auto}
+/* sezione a scorrimento: il foglio resta fermo, i passi scorrono */
+.scrolly-sec{padding-bottom:30px}
+.scrolly{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:start;margin-top:10px}
+.stage-col{position:sticky;top:78px;height:calc(100vh - 100px);display:grid;place-items:center}
+.stagebox{position:relative;width:min(100%,430px)}
+#scene{display:block;width:100%;height:auto;max-height:calc(100vh - 190px);aspect-ratio:210/297;margin-inline:auto;background:#fff;border:2px solid var(--k);border-radius:3px;box-shadow:9px 9px 0 var(--y);overflow:hidden}
+#cam{transform-origin:0 0;transition:transform 1.1s cubic-bezier(.5,0,.15,1)}
+#scene .ring{fill:var(--m);fill-rule:evenodd;opacity:0;transition:opacity .6s}#scene.s1 .ring{opacity:.45}
+#scene .bd{opacity:0;transition:opacity .6s}#scene.s1 .bd{opacity:1}
+#scene .mk{transition:stroke-width .6s,stroke .6s}
+.chipbar{position:absolute;left:-12px;top:-16px;z-index:3;display:flex;gap:8px;align-items:baseline;background:#fff;border:2px solid var(--k);border-radius:99px;padding:6px 14px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--c);max-width:calc(100% + 24px)}
+.chipbar b{font-size:20px;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(transparent 58%,var(--y) 58%);padding:0 3px}.chipbar small{font-size:12px;color:var(--ink2);font-weight:600}
+.zoompill{position:absolute;right:-12px;bottom:-14px;z-index:3;background:var(--m);color:#fff;border:2px solid var(--k);border-radius:99px;padding:4px 14px;font-weight:800;font-size:15px;box-shadow:3px 3px 0 var(--k);opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;font-variant-numeric:tabular-nums}
+.stagebox[data-step="3"] .zoompill{opacity:1;transform:none}
+.steps-col{padding-bottom:12vh}
+.st{min-height:78vh;display:flex;flex-direction:column;justify-content:center;opacity:.28;transition:opacity .5s}
+.st.on{opacity:1}
+.st .num{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:2px solid var(--k);font-weight:800;font-size:20px;margin-bottom:18px}
+.st .n0{background:var(--c)}.st .n1{background:var(--m);color:#fff}.st .n2{background:var(--y)}.st .n3{background:var(--k);color:#fff}
+.st h3{margin:0 0 12px;font-size:clamp(26px,3.2vw,40px);line-height:1.08;letter-spacing:-.03em}
+.st p{margin:0;color:var(--ink2);font-size:18px;max-width:30em}
 /* faq */
 .faq{max-width:820px}
 details{background:#fff;border:2px solid var(--k);border-radius:16px;margin-bottom:14px;transition:box-shadow .2s,transform .2s}
@@ -339,7 +375,7 @@ footer{padding:0 0 56px;color:var(--ink2);font-size:14.5px}
 footer .bar4{margin-bottom:34px}
 footer .wrap{display:grid;gap:8px}footer a{color:var(--m2);text-decoration:none;font-weight:700}footer a:hover{text-decoration:underline}
 .nf{min-height:70vh;display:grid;place-items:center;text-align:center;padding:40px 0}
-@media (max-width:960px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.sheetwrap{width:min(78%,360px);margin-top:10px}.feats{grid-template-columns:repeat(2,minmax(0,1fr))}.demo{grid-template-columns:minmax(0,1fr)}.steps{grid-template-columns:minmax(0,1fr)}nav{display:none}.top .wrap{gap:12px}.top .btn.sm{margin-left:auto}}
+@media (max-width:960px){.scrolly{grid-template-columns:minmax(0,1fr);gap:0}.stage-col{top:64px;height:46vh;background:#fff;z-index:5;padding:14px 0 10px;border-bottom:2px solid var(--k)}.stagebox{width:min(100%,250px)}#scene{max-height:38vh}.st{min-height:56vh}.steps-col{padding-bottom:6vh}.chipbar{left:-6px;font-size:12.5px}.hero .wrap{grid-template-columns:minmax(0,1fr)}.sheetwrap{width:min(78%,360px);margin-top:10px}.feats{grid-template-columns:repeat(2,minmax(0,1fr))}.demo{grid-template-columns:minmax(0,1fr)}.steps{grid-template-columns:minmax(0,1fr)}nav{display:none}.top .wrap{gap:12px}.top .btn.sm{margin-left:auto}}
 @media (max-width:560px){.feats{grid-template-columns:minmax(0,1fr)}section{padding:64px 0}.dl-in{padding:34px 24px 40px}.dl{border-radius:22px}.top .btn.sm{display:none}.lang{margin-left:auto}.demo{padding:18px;border-radius:20px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.hc,.hm{opacity:1;stroke-dashoffset:0}em::before{transform:none}}
 """
@@ -371,6 +407,7 @@ def home(lang):
     alt_path = T[t["alt"]]["prefix"]
     feats = "".join(f'<div class="feat rv" style="--d:{i%4}">{icon(k)}<h3>{e(h)}</h3><p>{e(p)}</p></div>' for i, (k, h, p) in enumerate(t["feats"]))
     steps = "".join(f'<div class="step rv" style="--d:{i}"><h3>{e(h)}</h3><p>{e(p)}</p></div>' for i, (h, p) in enumerate(t["steps"]))
+    sc_steps = "".join(f'<article class="st{" on" if i == 0 else ""}" data-chip="{e(c)}"><span class="num n{i % 4}">{i+1}</span><h3>{e(h)}</h3><p>{e(p)}</p></article>' for i, (h, p, c) in enumerate(t["sc_steps"]))
     faq = "".join(f'<details class="rv"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in t["faq"])
     chips = "".join(f'<button class="chip" type="button" data-w="{w}" data-h="{h}" aria-pressed="{"true" if i == 0 else "false"}">{e(n)} {w}×{h}</button>' for i, (n, w, h) in enumerate(t["demo_presets"]))
     body = f'''<body><a class="skip" href="#main">{e(t["skip"])}</a>
@@ -395,13 +432,16 @@ def home(lang):
 <h3>{e(t["demo_bleed"])}</h3><label class="fld"><select id="demo-bleed"><option value="0">{e(t["demo_none_bleed"])}</option><option value="2">2 mm</option><option value="3" selected>3 mm</option><option value="5">5 mm</option></select></label>
 <label class="chk"><input id="demo-marks" type="checkbox" checked> {e(t["demo_marks"])}</label>
 <p class="note">{e(t["demo_note"])}</p></div>
-<div class="stage"><svg id="sheet" data-img="/img/card.webp" role="img" aria-label="{e(t["demo_h"])}"></svg>
+<div class="stage"><svg id="sheet" data-img="/img/card.webp" data-img2="/img/tile.webp" role="img" aria-label="{e(t["demo_h"])}"></svg>
 <div class="count"><b id="demo-n">10</b><span>{e(t["demo_pieces"])}</span><small id="demo-grid" data-rot="{e(t["demo_rot"])}" data-none="{e(t["demo_nofit"])}">2 × 5</small></div></div></div></div></section>
 
 <section id="{ids[0]}"><div class="wrap"><h2 class="rv">{e(t["feat_h"])}</h2><div class="feats" style="margin-top:36px">{feats}</div></div></section>
 
-<section><div class="wrap"><h2 class="rv">{e(t["show_h"])}</h2><p class="sub rv">{e(t["show_p"])}</p>
-<div class="shot rv"><i class="tl r"></i><i class="tl y"></i><i class="tl g"></i><img src="/img/app.webp" width="2400" height="1636" alt="{e(t["show_alt"])}" loading="lazy" decoding="async"></div></div></section>
+<section class="scrolly-sec"><div class="wrap"><span class="kick rv">{e(t["sc_kick"])}</span><h2 class="rv">{e(t["sc_h"])}</h2><p class="sub rv" style="margin-bottom:10px">{e(t["sc_p"])}</p>
+<div class="scrolly"><div class="stage-col"><div class="stagebox" id="stagebox"><div class="chipbar"><span id="sc-label"></span><b id="sc-n">10</b><small>{e(t["sc_unit"])}</small></div>
+<svg id="scene" viewBox="0 0 210 297" data-img="/img/card.webp" data-img2="/img/tile.webp" data-presets="{e(json.dumps([[n, w, h] for n, w, h in t["demo_presets"]], ensure_ascii=False))}" role="img" aria-label="{e(t["sc_alt"])}"></svg>
+<div class="zoompill" id="sc-zoom">100%</div></div></div>
+<div class="steps-col">{sc_steps}</div></div></div></section>
 
 <section id="{ids[2]}"><div class="wrap faq"><h2 class="rv">{e(t["faq_h"])}</h2><div style="margin-top:30px">{faq}</div></div></section>
 
