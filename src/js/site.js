@@ -71,8 +71,8 @@
       var grp = el('g', { transform: 'translate(' + g.iw / 2 + ' ' + g.ih / 2 + ')' + (g.rotated ? ' rotate(90)' : '') }, box);
       var im = el('image', { x: -(lw / 2 + b), y: -(lh / 2 + b), width: lw + 2 * b, height: lh + 2 * b, preserveAspectRatio: 'xMidYMid slice' }, grp);
       im.setAttributeNS('http://www.w3.org/1999/xlink', 'href', els.img); im.setAttribute('href', els.img);
-      if (b > 0) el('rect', { x: x - b, y: y - b, width: g.iw + 2 * b, height: g.ih + 2 * b, fill: 'none', stroke: '#EE2177', 'stroke-width': 0.25, 'stroke-dasharray': '1.2 0.9', opacity: 0.7 }, cell);
-      el('rect', { x: x, y: y, width: g.iw, height: g.ih, fill: 'none', stroke: '#00ADEE', 'stroke-width': 0.25 }, cell);
+      if (b > 0) el('rect', { x: x - b, y: y - b, width: g.iw + 2 * b, height: g.ih + 2 * b, fill: 'none', stroke: '#EC008C', 'stroke-width': 0.25, 'stroke-dasharray': '1.2 0.9', opacity: 0.7 }, cell);
+      el('rect', { x: x, y: y, width: g.iw, height: g.ih, fill: 'none', stroke: '#00AEEF', 'stroke-width': 0.25 }, cell);
     }
     if (S.marks && g.count) {
       var xs = [], ys = [], d = '';
