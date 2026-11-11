@@ -310,11 +310,11 @@ html:not(.js) .rv,.rv.in{opacity:1;transform:none}
 .ic{width:48px;height:48px;padding:11px;border-radius:50%;color:var(--k);border:2px solid var(--k);margin-bottom:16px}
 .feat:nth-child(3n+1) .ic{background:var(--c)}.feat:nth-child(3n+2) .ic{background:var(--m)}.feat:nth-child(3n) .ic{background:var(--y)}
 .feat h3{margin:0 0 6px;font-size:19px;letter-spacing:-.015em;line-height:1.2}.feat p{margin:0;color:var(--ink2);font-size:15.5px;line-height:1.5}
-/* finestra */
-.win{margin-top:8px;border-radius:14px;overflow:hidden;background:#fff;border:2px solid var(--k);box-shadow:10px 10px 0 var(--m)}
-.win .bar{display:flex;gap:8px;padding:12px 16px;background:var(--soft);border-bottom:2px solid var(--k)}
-.win .bar i{width:13px;height:13px;border-radius:50%;border:2px solid var(--k)}.win .bar i:nth-child(1){background:var(--m)}.win .bar i:nth-child(2){background:var(--y)}.win .bar i:nth-child(3){background:var(--c)}
-.win img{display:block;width:100%;height:auto}
+/* finestra dell'app: cattura reale con la sua ombra */
+.shot{position:relative;margin:8px auto 0;max-width:1120px}
+.tl{position:absolute;top:4.46%;width:.95%;aspect-ratio:1;border-radius:50%;translate:-50% -50%;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.22);z-index:1}
+.tl.r{left:3.67%;background:#FF5F57}.tl.y{left:5.19%;background:#FEBC2E}.tl.g{left:6.71%;background:#28C840}
+.shot img{display:block;width:100%;height:auto}
 /* faq */
 .faq{max-width:820px}
 details{background:#fff;border:2px solid var(--k);border-radius:16px;margin-bottom:14px;transition:box-shadow .2s,transform .2s}
@@ -401,7 +401,7 @@ def home(lang):
 <section id="{ids[0]}"><div class="wrap"><h2 class="rv">{e(t["feat_h"])}</h2><div class="feats" style="margin-top:36px">{feats}</div></div></section>
 
 <section><div class="wrap"><h2 class="rv">{e(t["show_h"])}</h2><p class="sub rv">{e(t["show_p"])}</p>
-<div class="win rv"><div class="bar"><i></i><i></i><i></i></div><img src="/img/app.webp" width="1800" height="1131" alt="{e(t["show_alt"])}" loading="lazy" decoding="async"></div></div></section>
+<div class="shot rv"><i class="tl r"></i><i class="tl y"></i><i class="tl g"></i><img src="/img/app.webp" width="2400" height="1636" alt="{e(t["show_alt"])}" loading="lazy" decoding="async"></div></div></section>
 
 <section id="{ids[2]}"><div class="wrap faq"><h2 class="rv">{e(t["faq_h"])}</h2><div style="margin-top:30px">{faq}</div></div></section>
 
