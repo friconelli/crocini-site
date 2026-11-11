@@ -19,11 +19,17 @@ GK_CMD = 'xattr -dr com.apple.quarantine "/Applications/Crocini.app"'
 TODO = "[da completare:"
 
 def latest_version():
-    """Versione dell'ultima release (letta con gh se disponibile; altrimenti la pagina non la mostra)."""
+    """Versione dell'ultima release: con gh se c'è, altrimenti dall'API pubblica di GitHub (serve sul build di Vercel)."""
     try:
         out = subprocess.run(["gh", "release", "view", "--repo", REPO, "--json", "tagName"],
                              capture_output=True, text=True, timeout=20)
-        return json.loads(out.stdout)["tagName"].lstrip("vV") if out.returncode == 0 else None
+        if out.returncode == 0: return json.loads(out.stdout)["tagName"].lstrip("vV")
+    except Exception:
+        pass
+    try:
+        from urllib.request import urlopen, Request
+        r = urlopen(Request(f"https://api.github.com/repos/{REPO}/releases/latest", headers={"User-Agent": "crocini-site-build"}), timeout=10)
+        return json.loads(r.read())["tag_name"].lstrip("vV")
     except Exception:
         return None
 VERSION = os.environ.get("CROCINI_VERSION") or latest_version()
@@ -176,7 +182,7 @@ def icon(name): return f'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke=
 LOGO = ('<svg class="logo" viewBox="0 0 44 44" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">'
         '<stop offset="0" stop-color="#FF3DA8"/><stop offset=".55" stop-color="#EC008C"/><stop offset="1" stop-color="#C70075"/></linearGradient></defs>'
         '<rect width="44" height="44" rx="11" fill="url(#lg)"/><rect x="11" y="15" width="22" height="14" rx="2.6" fill="#fff"/>'
-        '<path d="M7 14V7h7M30 7h7v7M7 30v7h7M30 37h7v-7" fill="none" stroke="#111" stroke-width="3" stroke-linecap="square"/></svg>')
+        '<path d="M7 14V7h7M30 7h7v7M7 30v7h7M30 37h7v-7" fill="none" stroke="#FFF200" stroke-width="3" stroke-linecap="square"/></svg>')
 
 REG = ('<svg class="reg" viewBox="0 0 58 58" aria-hidden="true" fill="none" stroke="#141414" stroke-width="2.4">'
        '<circle cx="29" cy="29" r="15"/><circle cx="29" cy="29" r="7" fill="#EC008C" stroke="none"/><path d="M29 2v18M29 38v18M2 29h18M38 29h18"/></svg>')
@@ -342,7 +348,7 @@ footer .wrap{display:grid;gap:8px}footer a{color:var(--m2);text-decoration:none;
 def url(p): return f"{SITE}/{p}"
 def head(t, title, desc, path, alt_path, ld, noindex=False):
     lang = t["lang"]
-    og = f"{SITE}/og-crocini{'-en' if lang == 'en' else ''}.png"
+    og = f"{SITE}/og-crocini{'-en' if lang == 'en' else ''}.jpg"
     hl = "" if noindex else (f'<link rel="canonical" href="{url(path)}">'
          f'<link rel="alternate" hreflang="{lang}" href="{url(path)}"><link rel="alternate" hreflang="{t["alt"]}" href="{url(alt_path)}">'
          f'<link rel="alternate" hreflang="x-default" href="{url(T["it"]["prefix"] + "")}">')
@@ -395,7 +401,7 @@ def home(lang):
 <section id="{ids[0]}"><div class="wrap"><h2 class="rv">{e(t["feat_h"])}</h2><div class="feats" style="margin-top:36px">{feats}</div></div></section>
 
 <section><div class="wrap"><h2 class="rv">{e(t["show_h"])}</h2><p class="sub rv">{e(t["show_p"])}</p>
-<div class="win rv"><div class="bar"><i></i><i></i><i></i></div><img src="/img/app.webp" width="1800" height="1231" alt="{e(t["show_alt"])}" loading="lazy" decoding="async"></div></div></section>
+<div class="win rv"><div class="bar"><i></i><i></i><i></i></div><img src="/img/app.webp" width="1800" height="1131" alt="{e(t["show_alt"])}" loading="lazy" decoding="async"></div></div></section>
 
 <section id="{ids[2]}"><div class="wrap faq"><h2 class="rv">{e(t["faq_h"])}</h2><div style="margin-top:30px">{faq}</div></div></section>
 
@@ -410,7 +416,7 @@ def home(lang):
     ld = [
      {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": NAME, "operatingSystem": "macOS 13+",
       "applicationCategory": "DesignApplication", "description": t["desc"], "url": url(t["prefix"]), "downloadUrl": DL,
-      "inLanguage": t["lang"], **({"softwareVersion": VERSION} if VERSION else {}), "image": url("og-crocini.png"),
+      "inLanguage": t["lang"], **({"softwareVersion": VERSION} if VERSION else {}), "image": url("og-crocini.jpg"),
       "offers": None},
      {"@context": "https://schema.org", "@type": "WebSite", "name": NAME, "url": SITE + "/", "inLanguage": ["it", "en"]},
      {"@context": "https://schema.org", "@type": "FAQPage", "name": t["faq_ld_name"],
