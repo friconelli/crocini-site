@@ -239,6 +239,12 @@ body{margin:0;background:#fff;color:var(--ink);font:400 17px/1.6 "Bricolage Grot
 img,svg{max-width:100%}a{color:inherit}
 .wrap{width:min(1120px,100% - 40px);margin-inline:auto}
 .skip{position:absolute;left:-999px;top:8px;background:var(--k);color:#fff;padding:8px 14px;border-radius:10px;z-index:99}.skip:focus{left:8px}
+/* scrollbar: i quattro colori di stampa, come la barra in alto */
+::-webkit-scrollbar{width:14px;height:14px}
+::-webkit-scrollbar-track{background:var(--soft);border-left:2px solid var(--k)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%);border:2px solid var(--k);border-radius:99px;min-height:56px;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{border-color:var(--m)}
+@supports not selector(::-webkit-scrollbar){html{scrollbar-color:var(--m) var(--soft);scrollbar-width:auto}}
 .bar4{height:6px;background:linear-gradient(90deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%)}
 /* evidenziatore giallo, come un pennarello sul foglio di prova */
 em{font-style:normal;color:var(--m);position:relative;white-space:nowrap;z-index:0}
