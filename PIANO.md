@@ -23,6 +23,6 @@ python3 build.py && python3 -m http.server 8099 -d dist     # http://localhost:8
 - [ ] Search Console / Bing Webmaster: inviare `/sitemap.xml`.
 
 ## Immagini e font
-- `src/img/card.webp` / `tile.webp`: grafiche di esempio per i fogli animati (`Scripts/make_sample_card.swift`: biglietto 91×61 mm a 300 dpi; `Scripts/make_sample_tile.swift`: monogramma quadrato che regge ritagli stretti, usato per gli elementi con proporzioni lontane dal biglietto). Lo screenshot dell'app è stato tolto dalla pagina.
+- `src/img/card.webp` / `tile.webp`: grafiche di esempio per i fogli animati (`Scripts/make_sample_card.swift`: biglietto generico 91×61 mm a 300 dpi, senza nomi né testo; `Scripts/make_sample_tile.swift`: cerchi C M Y quadrati che reggono ritagli stretti, usato per gli elementi con proporzioni lontane dal biglietto). Lo screenshot dell'app è stato tolto dalla pagina.
 - `src/og-crocini*.png`: `Scripts/make_og.swift`. Favicon dall'icona dell'app.
 - Font: Bricolage Grotesque (OFL), variabile alleggerita in woff2 (Latin).
