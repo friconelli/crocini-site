@@ -81,13 +81,17 @@ T = {
  "show_alt": "La finestra di Crocini: a sinistra le impostazioni, a destra un foglio A4 con dieci biglietti da visita e i segni di taglio",
 
  "sc_kick": "Dentro l’app", "sc_h": "Scorri, e guarda il foglio cambiare",
- "sc_p": "Ogni funzione, vista sul foglio: la pagina si muove con te.", "sc_unit": "pezzi", "sc_alt": "Un foglio A4 che cambia mentre scorri: biglietti, abbondanza, segni di taglio, zoom e rotazione automatica",
+ "sc_p": "Ogni funzione, vista sul foglio: la pagina si muove con te.", "sc_unit": "pezzi", "sc_alt": "Un foglio A4 che cambia mentre scorri: biglietti, abbondanza, segni di taglio, zoom, rotazione, numerazione, fustella e fronte-retro",
  "sc_steps": [
   ("Un preset e il foglio è pronto", "Biglietti, cartoline, flyer, etichette: scegli un formato e Crocini calcola subito quanti pezzi entrano. I tuoi preset li salvi e li richiami con un clic.", ""),
   ("L’abbondanza a modo tuo", "Il file ce l’ha già? La usi. Altrimenti la aggiungi con un colore piatto o ingrandendo la grafica: stampa a vivo senza strisce bianche.", "Abbondanza 3 mm"),
   ("Crocini su misura", "Spessore, lunghezza, colore e distanza dal rifilo. Stanno sul bordo della griglia, pronti per la ghigliottina.", "Segni di taglio"),
   ("Zoom come negli editor grafici", "Rotella, pinch, lente e mano; barra spaziatrice per spostarti. Controlli ogni dettaglio del taglio prima di stampare.", "Zoom"),
   ("Gira i pezzi da solo", "Se ruotando gli elementi ne entrano di più sul foglio, Crocini li gira per te: da 3 a 5 segnalibri, senza toccare nulla.", ""),
+  ("Crocini anche tra gli elementi", "Con una distanza tra i pezzi, i segni di taglio compaiono anche nelle fessure: tagli ogni pezzo con precisione, non solo sul bordo del foglio.", "Segni tra gli elementi"),
+  ("Numero progressivo", "Per abbonamenti e tessere: parti dal numero che vuoi, scegli font, posizione e formato, e produci più fogli di fila.", "Numerazione"),
+  ("Fustella per il plotter", "Un secondo PDF con la linea di taglio, anche con una forma tua da SVG, e i segni di registrazione negli angoli.", "Fustella"),
+  ("Fronte-retro", "Carichi il retro e il PDF ha due pagine: il retro è già specchiato e lo allinei al millimetro se la stampante sposta.", "Fronte / Retro"),
  ],
  "faq_h": "Domande frequenti",
  "faq": [
@@ -160,13 +164,17 @@ T = {
  "show_alt": "The Crocini window: settings on the left, an A4 sheet with ten business cards and crop marks on the right",
 
  "sc_kick": "Inside the app", "sc_h": "Scroll, and watch the sheet change",
- "sc_p": "Every feature, shown on the sheet: the page moves with you.", "sc_unit": "pieces", "sc_alt": "An A4 sheet that changes as you scroll: cards, bleed, crop marks, zoom and automatic rotation",
+ "sc_p": "Every feature, shown on the sheet: the page moves with you.", "sc_unit": "pieces", "sc_alt": "An A4 sheet that changes as you scroll: cards, bleed, crop marks, zoom, rotation, numbering, cut file and double-sided",
  "sc_steps": [
   ("A preset and the sheet is ready", "Business cards, postcards, flyers, labels: pick a format and Crocini instantly works out how many pieces fit. Save your own presets and recall them with one click.", ""),
   ("Bleed, your way", "Already in the file? Use it. Otherwise add it with a flat colour or by enlarging the artwork: full-bleed printing without white edges.", "Bleed 3 mm"),
   ("Custom crop marks", "Thickness, length, colour and distance from the trim. They sit on the edge of the grid, ready for the guillotine.", "Crop marks"),
   ("Zoom like design editors", "Wheel, pinch, lens and hand; space bar to pan. Check every detail of the cut before printing.", "Zoom"),
   ("It turns the pieces for you", "If turning the items fits more on the sheet, Crocini rotates them for you: from 3 to 5 bookmarks, without touching a thing.", ""),
+  ("Crop marks between items too", "With a gap between the pieces, crop marks also appear in the gutters: cut every piece precisely, not only along the edge of the sheet.", "Marks between items"),
+  ("Sequential numbering", "For memberships and passes: start from any number, pick font, position and format, and produce several sheets in a row.", "Numbering"),
+  ("Cut file for the plotter", "A second PDF with the cut line, even with your own shape from an SVG, and registration marks in the corners.", "Cut file"),
+  ("Double-sided", "Load the back and the PDF has two pages: the back is already mirrored, and you can align it to the millimetre if your printer shifts.", "Front / Back"),
  ],
  "faq_h": "Frequently asked questions",
  "faq": [

@@ -177,16 +177,19 @@
   el('rect', { x: 0, y: 0, width: PW, height: PH, fill: '#fff' }, cam);
   var cardsG = el('g', {}, cam);
   var marks = el('path', { 'class': 'mk', fill: 'none', stroke: '#141414', 'stroke-width': 0.3 }, cam);
+  var reg = el('path', { fill: '#141414' }, cam);   // segni di registrazione del plotter
 
   var cur = { w: 85, h: 55, rot: null, bleed: 3 }, last = null;
 
-  function grid(iw, ih, margin, rotated) {
-    var cols = Math.max(0, Math.floor((PW - 2 * margin) / iw + 1e-9)), rows = Math.max(0, Math.floor((PH - 2 * margin) / ih + 1e-9));
-    return { cols: cols, rows: rows, count: cols * rows, iw: iw, ih: ih, rotated: rotated, x0: (PW - cols * iw) / 2, y0: (PH - rows * ih) / 2 };
+  function grid(iw, ih, margin, rotated, gap) {
+    var cols = Math.max(0, Math.floor((PW - 2 * margin + gap) / (iw + gap) + 1e-9)), rows = Math.max(0, Math.floor((PH - 2 * margin + gap) / (ih + gap) + 1e-9));
+    var gw = cols * iw + Math.max(0, cols - 1) * gap, gh = rows * ih + Math.max(0, rows - 1) * gap;
+    return { cols: cols, rows: rows, count: cols * rows, iw: iw, ih: ih, rotated: rotated, gap: gap, gw: gw, gh: gh, x0: (PW - gw) / 2, y0: (PH - gh) / 2 };
   }
   function layout() {
     var off = Math.max(cur.bleed, 1), len = 4, margin = Math.max(10, off + len + 1);
-    var a = grid(cur.w, cur.h, margin, false), b = grid(cur.h, cur.w, margin, true), g;
+    var gp = cur.gap || 0;
+    var a = grid(cur.w, cur.h, margin, false, gp), b = grid(cur.h, cur.w, margin, true, gp), g;
     if (cur.rot === true) g = b; else if (cur.rot === false) g = a; else g = b.count > a.count ? b : a;
     g.off = off; g.len = len; return g;
   }
@@ -195,22 +198,47 @@
     while (cardsG.firstChild) cardsG.removeChild(cardsG.firstChild);
     var i = 0;
     for (var r = 0; r < g.rows; r++) for (var c = 0; c < g.cols; c++, i++) {
-      var x = g.x0 + c * g.iw, y = g.y0 + r * g.ih;
+      var x = g.x0 + c * (g.iw + g.gap), y = g.y0 + r * (g.ih + g.gap);
       var cell = el('g', { 'class': 'pop', style: '--i:' + i }, cardsG);
       var nest = el('svg', { x: x, y: y, width: g.iw, height: g.ih, viewBox: '0 0 ' + g.iw + ' ' + g.ih, overflow: 'hidden' }, cell);
       var lw = g.rotated ? g.ih : g.iw, lh = g.rotated ? g.iw : g.ih;
       var grp = el('g', { transform: 'translate(' + g.iw / 2 + ' ' + g.ih / 2 + ')' + (g.rotated ? ' rotate(90)' : '') }, nest);
       var im = el('image', { x: -(lw / 2 + b), y: -(lh / 2 + b), width: lw + 2 * b, height: lh + 2 * b, preserveAspectRatio: 'xMidYMid slice' }, grp);
       im.setAttribute('href', artFor(lw, lh));
+      if (cur.back) {   // retro: fondo scuro con la scritta
+        el('rect', { x: -(lw / 2 + b), y: -(lh / 2 + b), width: lw + 2 * b, height: lh + 2 * b, fill: '#141414' }, grp);
+        var bt = el('text', { x: 0, y: 0, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'font-size': Math.min(lw, lh) * 0.2, 'font-weight': 800, fill: '#FFF200' }, grp);
+        bt.textContent = 'RETRO';
+      }
       // anello dell'abbondanza (tra rifilo e bordo vivo), bordo tratteggiato e rifilo
       el('path', { 'class': 'ring', d: 'M' + (x - b) + ' ' + (y - b) + 'h' + (g.iw + 2 * b) + 'v' + (g.ih + 2 * b) + 'h' + -(g.iw + 2 * b) + 'z M' + x + ' ' + y + 'v' + g.ih + 'h' + g.iw + 'v' + -g.ih + 'h' + -g.iw + 'z' }, cell);
       el('rect', { 'class': 'bd', x: x - b, y: y - b, width: g.iw + 2 * b, height: g.ih + 2 * b, fill: 'none', stroke: '#EC008C', 'stroke-width': 0.25, 'stroke-dasharray': '1.2 .9' }, cell);
       el('rect', { x: x, y: y, width: g.iw, height: g.ih, fill: 'none', stroke: '#00AEEF', 'stroke-width': 0.25 }, cell);
+      if (cur.cut) el('rect', { x: x, y: y, width: g.iw, height: g.ih, rx: 4, fill: 'none', stroke: '#EC008C', 'stroke-width': 0.55 }, cell);
+      if (cur.nums) {   // numero progressivo
+        var label = String(i + 1); while (label.length < 3) label = '0' + label;
+        var nt = el('text', { x: x + g.iw / 2, y: y + g.ih / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'font-size': Math.min(g.iw, g.ih) * 0.2, 'font-weight': 800,
+          fill: '#141414', stroke: '#fff', 'stroke-width': 0.9, 'paint-order': 'stroke', transform: g.rotated ? 'rotate(90 ' + (x + g.iw / 2) + ' ' + (y + g.ih / 2) + ')' : null }, cell);
+        nt.textContent = label;
+      }
     }
-    var d = '', top = g.y0, bot = g.y0 + g.rows * g.ih, left = g.x0, right = g.x0 + g.cols * g.iw;
-    for (c = 0; c <= g.cols; c++) { var xx = g.x0 + c * g.iw; d += 'M' + xx + ' ' + (top - g.off) + 'V' + (top - g.off - g.len) + 'M' + xx + ' ' + (bot + g.off) + 'V' + (bot + g.off + g.len); }
-    for (r = 0; r <= g.rows; r++) { var yy = g.y0 + r * g.ih; d += 'M' + (left - g.off) + ' ' + yy + 'H' + (left - g.off - g.len) + 'M' + (right + g.off) + ' ' + yy + 'H' + (right + g.off + g.len); }
+    // segni di taglio: sui bordi di ogni elemento, fuori dalla griglia; con una distanza anche nelle fessure
+    var d = '', top = g.y0, bot = g.y0 + g.gh, xs = [], ys = [];
+    for (c = 0; c < g.cols; c++) { var xl = g.x0 + c * (g.iw + g.gap); xs.push(xl); xs.push(xl + g.iw); }
+    for (r = 0; r < g.rows; r++) { var yt = g.y0 + r * (g.ih + g.gap); ys.push(yt); ys.push(yt + g.ih); }
+    var left = g.x0, right = g.x0 + g.gw;
+    function uniq(v) { var o = []; v.forEach(function (n) { if (!o.some(function (m) { return Math.abs(m - n) < 0.001; })) o.push(n); }); return o; }
+    xs = uniq(xs); ys = uniq(ys);
+    xs.forEach(function (xx) { d += 'M' + xx + ' ' + (top - g.off) + 'V' + (top - g.off - g.len) + 'M' + xx + ' ' + (bot + g.off) + 'V' + (bot + g.off + g.len); });
+    ys.forEach(function (yy) { d += 'M' + (left - g.off) + ' ' + yy + 'H' + (left - g.off - g.len) + 'M' + (right + g.off) + ' ' + yy + 'H' + (right + g.off + g.len); });
+    if (g.gap > 0.001) {
+      var inset = Math.min(g.off, g.gap / 3);
+      for (r = 0; r < g.rows - 1; r++) { var ya = g.y0 + r * (g.ih + g.gap) + g.ih + inset, yb = g.y0 + (r + 1) * (g.ih + g.gap) - inset; xs.forEach(function (xx) { d += 'M' + xx + ' ' + ya + 'V' + yb; }); }
+      for (c = 0; c < g.cols - 1; c++) { var xa = g.x0 + c * (g.iw + g.gap) + g.iw + inset, xb = g.x0 + (c + 1) * (g.iw + g.gap) - inset; ys.forEach(function (yy) { d += 'M' + xa + ' ' + yy + 'H' + xb; }); }
+    }
     marks.setAttribute('d', d);
+    // quattro quadrati di registrazione negli angoli del foglio, solo nel passo del plotter
+    reg.setAttribute('d', cur.cut ? [[3, 3], [PW - 7, 3], [3, PH - 7], [PW - 7, PH - 7]].map(function (p) { return 'M' + p[0] + ' ' + p[1] + 'h4v4h-4z'; }).join('') : '');
     nEl.textContent = g.count;
     last = g; return g;
   }
@@ -230,6 +258,7 @@
   function go(i) {
     if (i === active) return;
     active = i; stop();
+    cur.gap = 0; cur.nums = false; cur.cut = false; cur.back = false;
     steps.forEach(function (s, k) { s.classList.toggle('on', k === i); });
     scene.setAttribute('class', 's' + i); box.setAttribute('data-step', i);
     var chip = steps[i].getAttribute('data-chip');
@@ -253,10 +282,22 @@
       cur.w = 85; cur.h = 55; cur.rot = null; cur.bleed = 3; render(); labelEl.textContent = chip;
       var frames = [[PW / 2, PH / 2, 1], [PW / 2, 90, 2.2], [150, 60, 3.4], [60, 235, 1.8]];
       every(1900, function (k) { var f = frames[k % frames.length]; camTo(f[0], f[1], f[2]); zoomEl.textContent = Math.round(f[2] * 100) + '%'; });
-    } else {                                           // rotazione: da 3 pezzi dritti a 5 ruotati
+    } else if (i === 4) {                              // rotazione: da 3 pezzi dritti a 5 ruotati
       camTo(PW / 2, PH / 2, 1); cur.w = 50; cur.h = 150; cur.bleed = 3;
       var name = (presets[4] || ['', 50, 150])[0];
       every(2400, function (k) { cur.rot = (k % 2 === 1) ? null : false; render(); labelEl.textContent = name + ' 50×150'; });
+    } else if (i === 5) {                              // segni anche nelle fessure tra gli elementi
+      cur.w = 85; cur.h = 55; cur.rot = false; cur.bleed = 3; cur.gap = 6; g = render(); labelEl.textContent = chip;
+      camTo(g.x0 + g.iw + g.gap / 2, g.y0 + g.ih + g.gap / 2, 4.2);
+    } else if (i === 6) {                              // numero progressivo
+      cur.w = 85; cur.h = 55; cur.rot = false; cur.bleed = 3; cur.nums = true; g = render(); labelEl.textContent = chip;
+      camTo(PW / 2, g.y0 + g.ih, 1.5);
+    } else if (i === 7) {                              // fustella per il plotter
+      cur.w = 85; cur.h = 55; cur.rot = false; cur.bleed = 3; cur.gap = 4; cur.cut = true; g = render(); labelEl.textContent = chip;
+      camTo(PW / 2, PH / 2, 1);
+    } else {                                           // fronte-retro: si alternano i due lati
+      cur.w = 85; cur.h = 55; cur.rot = false; cur.bleed = 3; camTo(PW / 2, PH / 2, 1);
+      every(1900, function (k) { cur.back = (k % 2 === 1); render(); labelEl.textContent = chip.split(' / ')[cur.back ? 1 : 0] || chip; });
     }
   }
 
