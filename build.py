@@ -10,6 +10,8 @@ from datetime import date
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get("SITE_URL", "https://crocini.app").rstrip("/")
+# ID del contenitore Google Tag Manager (GTM-XXXXXXX): se manca, il sito resta senza statistiche e senza banner.
+GTM_ID = os.environ.get("GTM_ID", "").strip()
 REPO = "friconelli/crocini"
 NAME = "Crocini"
 DL = f"https://github.com/{REPO}/releases/latest/download/Crocini.zip"
@@ -117,6 +119,8 @@ T = {
  "copy": "Copia", "copied": "Copiato",
  "dl_upd": "Dopo il primo avvio non devi più preoccuparti: Crocini controlla gli aggiornamenti e li installa con un clic.",
  "foot_priv": "Il sito non usa cookie né strumenti di statistica. L’app lavora in locale e si collega solo per cercare aggiornamenti.",
+ "foot_priv_stats": "Il sito usa cookie di statistica (Google Analytics e Microsoft Clarity) solo se li accetti. L’app lavora in locale e si collega solo per cercare aggiornamenti.",
+ "ck_text": "Usiamo cookie di statistica (Google Analytics e Microsoft Clarity) per capire come viene usato il sito. Partono solo se accetti.", "ck_accept": "Accetta", "ck_reject": "Rifiuta", "ck_prefs": "Preferenze cookie",
  "foot_font": "Carattere: Bricolage Grotesque (SIL Open Font License).",
  "foot_code": "Codice e release su GitHub",
  "skip": "Vai al contenuto", "nf_t": "Pagina non trovata", "nf_p": "Questa pagina non esiste.", "nf_b": "Torna alla home",
@@ -200,6 +204,8 @@ T = {
  "copy": "Copy", "copied": "Copied",
  "dl_upd": "After the first launch there is nothing more to do: Crocini checks for updates and installs them with one click.",
  "foot_priv": "This site uses no cookies and no analytics. The app works locally and only connects to look for updates.",
+ "foot_priv_stats": "This site uses analytics cookies (Google Analytics and Microsoft Clarity) only if you accept them. The app works locally and only connects to look for updates.",
+ "ck_text": "We use analytics cookies (Google Analytics and Microsoft Clarity) to understand how the site is used. They only start if you accept.", "ck_accept": "Accept", "ck_reject": "Reject", "ck_prefs": "Cookie preferences",
  "foot_font": "Typeface: Bricolage Grotesque (SIL Open Font License).",
  "foot_code": "Code and releases on GitHub",
  "skip": "Skip to content", "nf_t": "Page not found", "nf_p": "This page does not exist.", "nf_b": "Back to home",
@@ -273,6 +279,12 @@ img,svg{max-width:100%}a{color:inherit}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%);border:2px solid var(--k);border-radius:99px;min-height:56px;background-clip:padding-box}
 ::-webkit-scrollbar-thumb:hover{border-color:var(--m)}
 @supports not selector(::-webkit-scrollbar){html{scrollbar-color:var(--m) var(--soft);scrollbar-width:auto}}
+.ck{position:fixed;left:16px;bottom:16px;z-index:60;max-width:380px;background:#fff;border:2px solid var(--k);border-radius:18px;padding:16px 18px;box-shadow:5px 5px 0 var(--y)}
+.ck[hidden]{display:none}.ck p{margin:0 0 12px;font-size:14.5px;line-height:1.45;color:var(--ink2)}
+.ckb{display:flex;gap:10px}.ckb button{font:700 14px inherit;font-family:inherit;border:2px solid var(--k);border-radius:99px;padding:8px 16px;cursor:pointer;background:#fff;color:var(--k)}
+.ckb .cky{background:var(--m);color:#fff;box-shadow:3px 3px 0 var(--k)}
+button.lnk{font:inherit;color:inherit;background:none;border:0;padding:0;margin-left:6px;text-decoration:underline;cursor:pointer}
+@media (max-width:560px){.ck{left:12px;right:12px;bottom:12px;max-width:none}}
 .bar4{height:6px;background:linear-gradient(90deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%)}
 /* evidenziatore giallo, come un pennarello sul foglio di prova */
 em{font-style:normal;color:var(--m);position:relative;white-space:nowrap;z-index:0}
@@ -429,6 +441,12 @@ def head(t, title, desc, path, alt_path, ld, noindex=False):
 
 APPLE = '<svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>'
 
+def consent_html(t):
+    if not GTM_ID: return ""
+    return (f'<div id="cookie-banner" class="ck" role="dialog" aria-live="polite" aria-label="{e(t["ck_prefs"])}" hidden><p>{e(t["ck_text"])}</p>'
+            f'<div class="ckb"><button type="button" class="ckn" data-ck="deny">{e(t["ck_reject"])}</button><button type="button" class="cky" data-ck="grant">{e(t["ck_accept"])}</button></div></div>'
+            f'<script src="/js/consent.js" data-gtm="{e(GTM_ID)}" defer></script>')
+
 def home(lang):
     t = T[lang]; ids = IDS[lang]; P = "/" + t["prefix"]
     ver = f'<p class="meta">{e(t["dl_ver"])} {e(VERSION)} · {e(t["dl_req"])}</p>' if VERSION else f'<p class="meta">{e(t["dl_req"])}</p>'
@@ -480,8 +498,8 @@ def home(lang):
 <button class="cp" type="button" data-copy="{e(GK_CMD)}" data-done="{e(t["copied"])}">{e(t["copy"])}</button></li></ol></div>
 <p class="upd">{e(t["dl_upd"])}</p></div></div></div></section>
 </main>
-<footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv"])}</div><div>{e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
-<script src="/js/vendor/gsap.min.js" defer></script><script src="/js/vendor/ScrollTrigger.min.js" defer></script><script src="/js/vendor/lenis.min.js" defer></script><script src="/js/site.js" defer></script></body></html>'''
+<footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv_stats"] if GTM_ID else t["foot_priv"])}{(" <button type=\"button\" class=\"lnk\" data-ck-open>" + e(t["ck_prefs"]) + "</button>") if GTM_ID else ""}</div><div>{e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
+<script src="/js/vendor/gsap.min.js" defer></script><script src="/js/vendor/ScrollTrigger.min.js" defer></script><script src="/js/vendor/lenis.min.js" defer></script><script src="/js/site.js" defer></script>{consent_html(t)}</body></html>'''
     ld = [
      {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": NAME, "operatingSystem": "macOS 13+",
       "applicationCategory": "DesignApplication", "description": t["desc"], "url": url(t["prefix"]), "downloadUrl": DL,
