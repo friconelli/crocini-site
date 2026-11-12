@@ -551,7 +551,7 @@ def main():
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
     write("llms.txt", f"# {NAME}\n\n> App per Mac che dispone biglietti da visita, flyer e locandine sul foglio di stampa con abbondanza e segni di taglio (crocini) ed esporta un PDF pronto per la tipografia.\n\n- Sito: {SITE}/\n- English: {SITE}/en/\n- Download: {DL}\n- Codice e release: {GH}\n- Requisiti: macOS 13+, Apple Silicon e Intel\n")
     left = [r for r, c in pages.items() if TODO in c]
-    print(f"Sito generato in dist/ ({SITE}) — versione release: {VERSION or 'non letta'}")
+    print(f"Sito generato in dist/ ({SITE}), versione release: {VERSION or 'non letta'}")
     if left: print("DA COMPLETARE in:", ", ".join(left))
     if "crocini.app" in SITE: print("NOTA: dominio predefinito (crocini.app): da confermare/acquistare, poi SITE_URL=… ./build.py")
 
