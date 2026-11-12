@@ -274,11 +274,11 @@ img,svg{max-width:100%}a{color:inherit}
 .wrap{width:min(1120px,100% - 40px);margin-inline:auto}
 .skip{position:absolute;left:-999px;top:8px;background:var(--k);color:#fff;padding:8px 14px;border-radius:10px;z-index:99}.skip:focus{left:8px}
 /* scrollbar: i quattro colori di stampa, come la barra in alto */
-::-webkit-scrollbar{width:14px;height:14px}
-::-webkit-scrollbar-track{background:var(--soft);border-left:2px solid var(--k)}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%);border:2px solid var(--k);border-radius:99px;min-height:56px;background-clip:padding-box}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--soft);border-left:1px solid var(--k)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%);border:1.5px solid var(--k);border-radius:99px;min-height:48px;background-clip:padding-box}
 ::-webkit-scrollbar-thumb:hover{border-color:var(--m)}
-@supports not selector(::-webkit-scrollbar){html{scrollbar-color:var(--m) var(--soft);scrollbar-width:auto}}
+@supports not selector(::-webkit-scrollbar){html{scrollbar-color:var(--m) var(--soft);scrollbar-width:thin}}
 .ck{position:fixed;left:16px;bottom:16px;z-index:60;max-width:380px;background:#fff;border:2px solid var(--k);border-radius:18px;padding:16px 18px;box-shadow:5px 5px 0 var(--y)}
 .ck[hidden]{display:none}.ck p{margin:0 0 12px;font-size:14.5px;line-height:1.45;color:var(--ink2)}
 .ckb{display:flex;gap:10px}.ckb button{font:700 14px inherit;font-family:inherit;border:2px solid var(--k);border-radius:99px;padding:8px 16px;cursor:pointer;background:#fff;color:var(--k)}
