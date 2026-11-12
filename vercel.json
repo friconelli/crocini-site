@@ -47,5 +47,29 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.crocini.app"
+        }
+      ],
+      "destination": "https://crocini.app/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "crocini.vercel.app"
+        }
+      ],
+      "destination": "https://crocini.app/$1",
+      "permanent": true
+    }
   ]
 }

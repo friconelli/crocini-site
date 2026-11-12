@@ -12,6 +12,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get("SITE_URL", "https://crocini.app").rstrip("/")
 # ID del contenitore Google Tag Manager (GTM-XXXXXXX): se manca, il sito resta senza statistiche e senza banner.
 GTM_ID = os.environ.get("GTM_ID", "").strip()
+# Donazioni: stesso link di Dolly Projector (support.json: {"bmc": "https://buymeacoffee.com/NOME"}); se vuoto il blocco non compare.
+_sp = os.path.join(HERE, "support.json")
+SUPPORT_URL = os.environ.get("SUPPORT_URL") or (json.load(open(_sp)).get("bmc", "") if os.path.exists(_sp) else "")
 REPO = "friconelli/crocini"
 NAME = "Crocini"
 DL = f"https://github.com/{REPO}/releases/latest/download/Crocini.zip"
@@ -111,6 +114,7 @@ T = {
  "dl_p": "Il download è un file zip: aprilo e trascina Crocini nella cartella Applicazioni.",
  "dl_btn": "Scarica per Mac", "dl_gh": "Vedi su GitHub", "dl_ver": "Versione", "dl_req": "macOS 13+ · Apple Silicon e Intel",
  "dl_first_h": "Al primo avvio",
+ "support_h": "Crocini è gratuito", "support_p": "Se ti è utile, puoi sostenerne lo sviluppo offrendomi un caffè.", "support_b": "Offrimi un caffè",
  "dl_first": [
   "Apri lo zip e trascina Crocini nella cartella Applicazioni.",
   "Fai clic destro su Crocini e scegli Apri (macOS chiede conferma una sola volta).",
@@ -196,6 +200,7 @@ T = {
  "dl_p": "The download is a zip file: open it and drag Crocini into your Applications folder.",
  "dl_btn": "Download for Mac", "dl_gh": "View on GitHub", "dl_ver": "Version", "dl_req": "macOS 13+ · Apple Silicon and Intel",
  "dl_first_h": "On first launch",
+ "support_h": "Crocini is free", "support_p": "If it is useful to you, you can support its development by buying me a coffee.", "support_b": "Buy me a coffee",
  "dl_first": [
   "Open the zip and drag Crocini into Applications.",
   "Right-click Crocini and choose Open (macOS asks for confirmation just once).",
@@ -279,6 +284,8 @@ img,svg{max-width:100%}a{color:inherit}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--k) 75% 100%);border:1.5px solid var(--k);border-radius:99px;min-height:48px;background-clip:padding-box}
 ::-webkit-scrollbar-thumb:hover{border-color:var(--m)}
 @supports not selector(::-webkit-scrollbar){html{scrollbar-color:var(--m) var(--soft);scrollbar-width:thin}}
+.support{padding:44px 0 56px}.support .wrap{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#fff;border:2px solid var(--k);border-radius:var(--r);padding:28px 32px;box-shadow:7px 7px 0 var(--c)}
+.support h2{font-size:clamp(1.5rem,2.6vw,2rem);margin:0 0 .2em;letter-spacing:-.03em}.support p{margin:0;color:var(--ink2);max-width:52ch}
 .ck{position:fixed;left:16px;bottom:16px;z-index:60;max-width:380px;background:#fff;border:2px solid var(--k);border-radius:18px;padding:16px 18px;box-shadow:5px 5px 0 var(--y)}
 .ck[hidden]{display:none}.ck p{margin:0 0 12px;font-size:14.5px;line-height:1.45;color:var(--ink2)}
 .ckb{display:flex;gap:10px}.ckb button{font:700 14px inherit;font-family:inherit;border:2px solid var(--k);border-radius:99px;padding:8px 16px;cursor:pointer;background:#fff;color:var(--k)}
@@ -441,6 +448,11 @@ def head(t, title, desc, path, alt_path, ld, noindex=False):
 
 APPLE = '<svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>'
 
+def support_html(t):
+    if not SUPPORT_URL: return ""
+    return (f'<section class="support"><div class="wrap"><div><h2>{e(t["support_h"])}</h2><p>{e(t["support_p"])}</p></div>'
+            f'<a class="btn ghost" href="{e(SUPPORT_URL)}" target="_blank" rel="noopener">☕ {e(t["support_b"])}</a></div></section>')
+
 def consent_html(t):
     if not GTM_ID: return ""
     return (f'<div id="cookie-banner" class="ck" role="dialog" aria-live="polite" aria-label="{e(t["ck_prefs"])}" hidden><p>{e(t["ck_text"])}</p>'
@@ -498,7 +510,7 @@ def home(lang):
 <button class="cp" type="button" data-copy="{e(GK_CMD)}" data-done="{e(t["copied"])}">{e(t["copy"])}</button></li></ol></div>
 <p class="upd">{e(t["dl_upd"])}</p></div></div></div></section>
 </main>
-<footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv_stats"] if GTM_ID else t["foot_priv"])}{(" <button type=\"button\" class=\"lnk\" data-ck-open>" + e(t["ck_prefs"]) + "</button>") if GTM_ID else ""}</div><div>{e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
+{support_html(t)}<footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv_stats"] if GTM_ID else t["foot_priv"])}{(" <button type=\"button\" class=\"lnk\" data-ck-open>" + e(t["ck_prefs"]) + "</button>") if GTM_ID else ""}</div><div>{e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
 <script src="/js/vendor/gsap.min.js" defer></script><script src="/js/vendor/ScrollTrigger.min.js" defer></script><script src="/js/vendor/lenis.min.js" defer></script><script src="/js/site.js" defer></script>{consent_html(t)}</body></html>'''
     ld = [
      {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": NAME, "operatingSystem": "macOS 13+",
