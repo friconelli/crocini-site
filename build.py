@@ -122,7 +122,7 @@ T = {
  "copy": "Copia", "copied": "Copiato",
  "dl_upd": "Dopo il primo avvio non devi più preoccuparti: Crocini controlla gli aggiornamenti e li installa con un clic.",
  "foot_priv": "Il sito non usa cookie: conta le visite in forma anonima con Vercel Web Analytics. L’app lavora in locale e si collega solo per cercare aggiornamenti.",
- "foot_font": "Carattere: Bricolage Grotesque (SIL Open Font License).",
+ "foot_font": "Carattere: Bricolage Grotesque (SIL Open Font License).", "foot_by": "Un progetto di",
  "foot_code": "Codice e release su GitHub",
  "skip": "Vai al contenuto", "nf_t": "Pagina non trovata", "nf_p": "Questa pagina non esiste.", "nf_b": "Torna alla home",
  "faq_ld_name": "Domande frequenti su Crocini",
@@ -206,7 +206,7 @@ T = {
  "copy": "Copy", "copied": "Copied",
  "dl_upd": "After the first launch there is nothing more to do: Crocini checks for updates and installs them with one click.",
  "foot_priv": "This site uses no cookies: visits are counted anonymously with Vercel Web Analytics. The app works locally and only connects to look for updates.",
- "foot_font": "Typeface: Bricolage Grotesque (SIL Open Font License).",
+ "foot_font": "Typeface: Bricolage Grotesque (SIL Open Font License).", "foot_by": "A project by",
  "foot_code": "Code and releases on GitHub",
  "skip": "Skip to content", "nf_t": "Page not found", "nf_p": "This page does not exist.", "nf_b": "Back to home",
  "faq_ld_name": "Crocini frequently asked questions",
@@ -493,7 +493,7 @@ def home(lang):
 <button class="cp" type="button" data-copy="{e(GK_CMD)}" data-done="{e(t["copied"])}">{e(t["copy"])}</button></li></ol></div>
 <p class="upd">{e(t["dl_upd"])}</p></div></div></div></section>
 </main>
-{support_html(t)}<footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv"])}</div><div>{e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
+{support_html(t)}<footer><div class="bar4" aria-hidden="true"></div><div class="wrap"><div>{e(t["foot_priv"])}</div><div>{e(t["foot_by"])} <a href="https://federicomancinelli.dev">Federico Mancinelli</a> · {e(t["foot_font"])} · <a href="{GH}">{e(t["foot_code"])}</a></div></div></footer>
 <script src="/js/vendor/gsap.min.js" defer></script><script src="/js/vendor/ScrollTrigger.min.js" defer></script><script src="/js/vendor/lenis.min.js" defer></script><script src="/js/site.js" defer></script></body></html>'''
     ld = [
      {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": NAME, "operatingSystem": "macOS 13+",
