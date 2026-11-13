@@ -324,3 +324,8 @@
   window.addEventListener('resize', onScroll);
   onScroll();
 })();
+
+// download: ogni clic diventa una pagina vista virtuale /download/mac in Vercel Web Analytics
+// (gli eventi personalizzati non ci sono nel piano gratuito, le pagine viste sì)
+document.addEventListener('click',e=>{const a=e.target.closest('a[href*="/releases/latest/download/"]');if(!a)return;
+  const lang=document.documentElement.lang==='en'?'en':'it';window.va&&window.va('pageview',{route:'/download/mac',path:'/download/mac?lang='+lang})});
