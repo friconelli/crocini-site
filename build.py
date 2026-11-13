@@ -12,6 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get("SITE_URL", "https://crocini.app").rstrip("/")
 # ID del contenitore Google Tag Manager (GTM-XXXXXXX): se manca, il sito resta senza statistiche e senza banner.
 GTM_ID = os.environ.get("GTM_ID", "").strip()
+CLARITY_ID = os.environ.get("CLARITY_ID", "zcz9hbdl6a").strip()   # Clarity parte da consent.js dopo il consenso (script esterno, compatibile con la CSP)
 # Donazioni: stesso link di Dolly Projector (support.json: {"bmc": "https://buymeacoffee.com/NOME"}); se vuoto il blocco non compare.
 _sp = os.path.join(HERE, "support.json")
 SUPPORT_URL = os.environ.get("SUPPORT_URL") or (json.load(open(_sp)).get("bmc", "") if os.path.exists(_sp) else "")
@@ -457,7 +458,7 @@ def consent_html(t):
     if not GTM_ID: return ""
     return (f'<div id="cookie-banner" class="ck" role="dialog" aria-live="polite" aria-label="{e(t["ck_prefs"])}" hidden><p>{e(t["ck_text"])}</p>'
             f'<div class="ckb"><button type="button" class="ckn" data-ck="deny">{e(t["ck_reject"])}</button><button type="button" class="cky" data-ck="grant">{e(t["ck_accept"])}</button></div></div>'
-            f'<script src="/js/consent.js" data-gtm="{e(GTM_ID)}" defer></script>')
+            f'<script src="/js/consent.js" data-gtm="{e(GTM_ID)}" data-clarity="{e(CLARITY_ID)}" defer></script>')
 
 def home(lang):
     t = T[lang]; ids = IDS[lang]; P = "/" + t["prefix"]

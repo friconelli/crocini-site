@@ -2,7 +2,7 @@
    si carica SOLO dopo «Accetta»; con «Rifiuta» non parte nessuno script di terze parti. */
 (function () {
   'use strict';
-  var me = document.currentScript, id = me && me.getAttribute('data-gtm');
+  var me = document.currentScript, id = me && me.getAttribute('data-gtm'), cid = me && me.getAttribute('data-clarity');
   if (!id) return;
   var KEY = 'crocini-consent', box = document.getElementById('cookie-banner');
   var store = { get: function () { try { return localStorage.getItem(KEY); } catch (e) { return null; } },
@@ -21,6 +21,12 @@
     var s = document.createElement('script');
     s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(id);
     document.head.appendChild(s);
+    if (cid) {   // Clarity: snippet ufficiale senza codice inline, solo dopo il consenso
+      window.clarity = window.clarity || function () { (window.clarity.q = window.clarity.q || []).push(arguments); };
+      window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
+      var c = document.createElement('script'); c.async = true; c.src = 'https://www.clarity.ms/tag/' + encodeURIComponent(cid);
+      document.head.appendChild(c);
+    }
   }
   function show() { if (box) box.hidden = false; }
   function hide() { if (box) box.hidden = true; }
