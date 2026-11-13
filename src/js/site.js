@@ -329,3 +329,7 @@
 // (gli eventi personalizzati non ci sono nel piano gratuito, le pagine viste sì)
 document.addEventListener('click',e=>{const a=e.target.closest('a[href*="/releases/latest/download/"]');if(!a)return;
   const lang=document.documentElement.lang==='en'?'en':'it';window.va&&window.va('pageview',{route:'/download/mac',path:'/download/mac?lang='+lang})});
+
+// donazioni: clic su Buy Me a Coffee come pagina vista virtuale /evento/supporto
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="buymeacoffee.com"]');
+  if(a&&window.va)window.va('pageview',{route:'/evento/supporto',path:'/evento/supporto'})},true);
